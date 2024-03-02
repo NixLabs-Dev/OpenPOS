@@ -32,15 +32,11 @@ export default function Greet() {
 
     if (itemIndex === null) {
       // Item doesnt exist
-      console.log("item doesnt exist, attempting to add it")
-      console.log("old newOrder: ", newOrder);
       newOrder = [...newOrder, ({
         ...item,
         quantity: 1
       })];
-      console.log("new newOrder: ", newOrder)
     } else {
-      console.log("item exists, attempting to increment it")
 
       // Item exists
       let newItem = newOrder[itemIndex];
