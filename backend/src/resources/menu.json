@@ -1,0 +1,222 @@
+[
+    {
+        "name": "Breakfast",
+        "items": [
+            {
+                "name": "Egg McMuffin",
+                "price": 1.89
+            },
+            {
+                "name": "Sausage Egg McMuffin",
+                "price": 2.67
+            },
+            {
+                "name": "Bacon Egg Cheese Biscuit",
+                "price": 5.60
+            },
+            {
+                "name": "Sausage Biscuit",
+                "price": 2.43
+            },
+            {
+                "name": "Sausage McGriddle",
+                "price": 3.65
+            },
+            {
+                "name": "Sausage Egg Cheese McGriddle",
+                "price": 5.65
+            },
+            {
+                "name": "Big Breakfast",
+                "price": 6.70
+            },
+            {
+                "name": "Big Breakfast W/ Hotcakes",
+                "price": 8.59
+            },
+            {
+                "name": "Hotcakes",
+                "price": 5.69
+            },
+            {
+                "name": "Sausage Burrito",
+                "price": 2.43
+            },
+            {
+                "name": "Hash Browns",
+                "price": 2.69
+            }    
+        ]
+    },
+    {
+        "name": "Lunch",
+        "items": [
+            {
+                "name": "Big Mac",
+                "price": 5.99
+            },
+            {
+                "name": "QPC",
+                "price": 6.39
+            },
+            {
+                "name": "Bacon QPC",
+                "price": 7.55
+            },
+            {
+                "name": "Dbl QPC",
+                "price": 8.67
+            },
+            {
+                "name": "Hamburger",
+                "price": 2.19
+            },
+            {
+                "name": "Cheeseburger",
+                "price": 2.39
+            },
+            {
+                "name": "Double Cheeseburger",
+                "price": 4.19
+            },
+            {
+                "name": "McDouble",
+                "price": 3.65
+            },
+            {
+                "name": "Bacon McDouble",
+                "price": 4.29
+            },
+            {
+                "name": "Daily Double",
+                "price": 4.09
+            },
+            {
+                "name": "4 Nuggets",
+                "price": 2.99
+            },
+            {
+                "name": "6 Nuggets",
+                "price": 3.65
+            },
+            {
+                "name": "10 Nuggets",
+                "price": 5.70
+            },
+            {
+                "name": "20 Nuggets",
+                "price": 8.99
+            },
+            {
+                "name": "40 Nuggets",
+                "price": 17.48
+            },
+            {
+                "name": "McCrispy",
+                "price": 5.36
+            },
+            {
+                "name": "Spicy McCrispy",
+                "price": 5.49
+            },
+            {
+                "name": "McChicken",
+                "price": 2.99
+            },
+            {
+                "name": "Hot 'N Spicy McChicken",
+                "price": 2.99
+            },
+            {
+                "name": "Filet-O-Fish",
+                "price": 5.36
+            },
+            {
+                "name": "Fry",
+                "price": 2.49
+            }
+        ]
+    },
+    {
+        "name": "Drinks",
+        "items": [
+            {
+                "name": "Tea",
+                "price": 1.99
+            },
+            {
+                "name": "Ice Tea",
+                "price": 1.99
+            },
+            {
+                "name": "Coffee",
+                "price": 1.89
+            },
+            {
+                "name": "Ice Coffee",
+                "price": 2.19
+            },
+            {
+                "name": "Soda",
+                "price": 1.49
+            },
+            {
+                "name": "Shamrock Shake",
+                "price": 3.89
+            },
+            {
+                "name": "Vanilla Shake",
+                "price": 3.89
+            },
+            {
+                "name": "Chocolate Shake",
+                "price": 3.89
+            },
+            {
+                "name": "Strawberry Shake",
+                "price": 3.89
+            }    
+        ]
+    },
+    {
+        "name": "Dessert",
+        "items": [
+            {
+                "name": "Cone",
+                "price": 2.59
+            },
+            {
+                "name": "Hot Fudge Sundae",
+                "price": 3.65
+            },
+            {
+                "name": "Hot Caramel Sundae",
+                "price": 3.65
+            },
+            {
+                "name": "Oreo McFlurry",
+                "price": 4.59
+            },
+            {
+                "name": "Oreo Shamrock McFlurry",
+                "price": 4.59
+            },
+            {
+                "name": "M&M McFlurry",
+                "price": 4.59
+            },
+            {
+                "name": "Apple Pie",
+                "price": 2.06
+            },
+            {
+                "name": "Strawberry and Creme Pie",
+                "price": 2.09
+            },
+            {
+                "name": "Chocolate Chip Cookie",
+                "price": 1.09
+            }
+        ]
+    }
+]
