@@ -1,24 +1,52 @@
 'use client'
 
 import { useEffect, useState } from 'react';
-import { invoke } from '@tauri-apps/api/tauri'
 import {MenuItemType, MenuCategoryType, OrderItemType} from "./util/types/Menu"
+import Modal from "./components/Modal"
+import Image from 'next/image';
 
 import { fetcher } from './util/fetcher';
 import useSWR from 'swr';
 
 import Menu from './components/Menu';
 import { onlyUnique } from './util/sorterFunctions';
+import { APIManager } from './api';
 
 export default function Greet() {
   const [order, setOrder] = useState<OrderItemType[]>([]);
-  const [category, setCategory] = useState(0);
-  const [orderTotal, setOrderTotal] = useState<number>(0);
-  const { data, error, isLoading } = useSWR('http://localhost:8080/menu', fetcher)
+  const [category, setCategory] = useState(0); //also also yes
+  const [orderTotal, setOrderTotal] = useState(0);
 
-  
+  const api = new APIManager()
+
+  const { data, error, isLoading } = useSWR(`http://${api.getBackendAddress()}/menu`, fetcher)
+
+  const [quantity, setQuantity] = useState(0);
+
+  const [modalIsOpen, setIsOpen] = useState(false);  
+
+  const [currentItem, setCurrentItem] = useState<OrderItemType|null>();
+
+  const launchQuantityPicker = (item: OrderItemType) => {
+
+      setCurrentItem(item)
+      setQuantity(1)
+      setIsOpen(true);
+  }
+
+  const closeModal = () => {
+    console.log(quantity)
+    addToOrder({
+      name: currentItem?.name!,
+      price: currentItem?.price!
+    }, quantity)
+    resetQuantity()
+    setCurrentItem(null)
+    setIsOpen(false);
+  }
+
   // Add item to order array
-  const addToOrder = (item: MenuItemType) => {
+  const addToOrder = (item: MenuItemType, quantity: number) => {
     let newOrder: OrderItemType[] = order
 
     let itemIndex: number | null = null;
@@ -34,7 +62,7 @@ export default function Greet() {
       // Item doesnt exist
       newOrder = [...newOrder, ({
         ...item,
-        quantity: 1
+        quantity: quantity
       })];
     } else {
 
@@ -42,7 +70,8 @@ export default function Greet() {
       let newItem = newOrder[itemIndex];
       newOrder.splice(itemIndex, 1);
       
-      newItem.quantity++;
+      newItem.quantity = newItem.quantity+quantity;
+
       newOrder = [...newOrder, newItem];
     }
 
@@ -121,62 +150,144 @@ export default function Greet() {
     }
   };
   
+  const placeOrder = () => {
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(order)
+    };
+    fetch('http://localhost:8080/placeorder', requestOptions)
+      setOrder([])
+  }
 
+  const increaseQuantity = (input: number) => {
 
-  if (error) return <div>failed to load</div>
-  if (isLoading) return <div>loading...</div>
+    if(quantity == 1) {
+      setQuantity(input)
+    }
+    else {
+      var newQuantity = quantity + input
+      if(newQuantity < 0){
+        setQuantity(0);
+      }
+      else {
+        setQuantity(newQuantity);
+      }
+    }
+  }
+
+  const resetQuantity = () => {
+    setQuantity(0);
+  }
+
+  if (error) return <div className="h-screen flex flex-col items-center justify-center relative text-white font-bold text-5xl">
+      <Image
+        src="/favicon.ico"
+        width={250}
+        height={250}
+        alt="A"
+      />
+    <div>OpenPOS failed to connect to {api.getBackendAddress()}</div>
+  </div>
+  if (isLoading) return <div className="h-screen flex flex-col items-center justify-center relative text-white font-bold text-5xl">
+    <Image
+        src="/favicon.ico"
+        width={250}
+        height={250}
+        alt="A"
+    />
+    <div>OpenPOS loading...</div>
+  </div>
 
   return (
-    <div className='flex flex-row'>
-      <div className="flex flex-col h-screen w-1/4 p-8" id="sidebar">
-        <h1 className='text-4xl font-bold'>OpenPOS v0.1</h1>
-
-        <div className='mt-12'>
-          {order.map((keyName: OrderItemType) => {            
-            return (
-              <div onClick={() => removeItem(keyName)} className='text-2xl flex w-full'>
-                <h1 className="text-white cursor-pointer mr-auto text-3xl">{keyName.name}</h1>
-                <h1 className="text-white cursor-pointer ml-auto">{keyName.quantity}</h1>
-              </div>
-            )
-          })}
+    <div>
+      <Modal state={modalIsOpen} closeModal={closeModal}>
+        <h1 className='text-xl'>Quantity of {currentItem?.name}</h1>
+        <div className='flex grid grid-cols-4 place-items-center'>
+          <h1></h1>
+          <h1 className='text-4xl text-white font-bold p-2'>Count:</h1>
+          <h1 className='text-4xl text-white font-bold p-2'>{quantity}</h1>
+          <h1></h1>
         </div>
-
-      <div className=' mt-auto flex flex-col gap-4'>
-        <div className='flex flex-row items-center'>
-          <button className="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-xl" onClick={()=>setOrder([])}>
-            Clear Order
-          </button>
-          <h1 className='text-2xl ml-auto'>Total: <span className='font-bold'>${orderTotal}</span></h1>
+        <div className='flex gap-4 grid grid-cols-3 gap-4 place-items-center p-4'>
+          <button className='text-4xl text-black font-bold p-2 bg-white rounded-2xl' onClick={()=>increaseQuantity(1)}>+1</button>
+          <button className='text-4xl text-black font-bold p-2 bg-white rounded-2xl' onClick={()=>increaseQuantity(5)}>+5</button>
+          <button className='text-4xl text-black font-bold p-2 bg-white rounded-2xl' onClick={()=>increaseQuantity(10)}>+10</button>
+          <button className='text-4xl text-black font-bold p-2 bg-white rounded-2xl' onClick={()=>increaseQuantity(-1)}>-1</button>
+          <button className='text-4xl text-black font-bold p-2 bg-white rounded-2xl' onClick={()=>increaseQuantity(-5)}>-5</button>
+          <button className='text-4xl text-black font-bold p-2 bg-white rounded-2xl' onClick={()=>increaseQuantity(-10)}>-10</button>
         </div>
+        <div className='flex gap-4 grid grid-cols-2 gap-4 place-items-center p-4'>
+          <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-2xl' onClick={()=>closeModal()}>Confirm</button>
+          <button className='bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded text-2xl' onClick={()=>resetQuantity()}>Reset</button>
+        </div>
+      </Modal>
 
-        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-2xl" onClick={()=>setOrder([])}>
-            Place Order
-          </button>
-      </div>
-      </div>
-      <div className="flex flex-col bg-zinc-800 h-screen w-3/4">
-        <div className='w-full h-48 bg-zinc-800 p-6 flex flex-row'>
-          <h1 className="text-2xl font-bold w-1/6">Item Customizations</h1>
-          <div className='w-5/6'>
-            
+      <div className='flex flex-row z-0'>
+        <div className="flex flex-col h-screen w-1/4 p-8" id="sidebar">
+          <h1 className='text-4xl font-bold'>OpenPOS v0.1</h1>
+
+          <div className='mt-12'>
+            {order.map((keyName: OrderItemType) => {            
+              return (
+                <div key={keyName.name} onClick={() => removeItem(keyName)} className='text-2xl flex w-full'>
+                  <h1 className="text-white cursor-pointer mr-auto text-3xl">{keyName.name}</h1>
+                  <h1 className="text-white cursor-pointer ml-auto">{keyName.quantity}</h1>
+                </div>
+              )
+            })}
           </div>
-        </div>
-        <div className='w-full bg-zinc-800 flex flex-row'>
-          <div className='w-3/5 bg-zinc-600 p-6 flex flex-row gap-6 items-center'>
-            <h1 className="text-3xl font-bold">Categories</h1>
-            {data.map((category: MenuCategoryType, index: number) => (
-              <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-2xl" onClick={()=>setCategory(index)}>
-                {category.name}
+
+          <div className=' mt-auto flex flex-col gap-4'>
+            <div className='flex flex-row items-center'>
+              <button className="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-xl" onClick={()=>setOrder([])}>
+                Clear Order
               </button>
-            ))}       
-          </div>
-          <div className='w-2/5 bg-zinc-500 p-6'>
-            <h1 className="text-6xl font-bold">{data[category].name}</h1>
-          </div>
-        </div>
+              <h1 className='text-2xl ml-auto'>Total: <span className='font-bold'>${orderTotal}</span></h1>
+            </div>
 
-        <Menu category={data[category]} addToOrder={addToOrder}/>
+            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-2xl" onClick={()=>placeOrder()}>
+                Place Order
+              </button>
+
+              {/* <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-2xl" onClick={()=>openModal()}>
+                Test
+              </button> */}
+
+          </div>
+          </div>
+        <div className="flex flex-col bg-zinc-800 h-screen w-3/4">
+          <div className='w-full h-48 bg-zinc-800 p-6 flex flex-row'>
+            <h1 className="text-2xl font-bold w-1/6">Item Customizations</h1>
+            <div className='w-5/6'>
+            </div>
+          </div>
+          <div className='w-full bg-zinc-800 flex flex-row overflow-hidden'>
+            <div className='w-3/5 bg-zinc-600 p-6 flex flex-row gap-3 items-center'>
+              <h1 className="text-3xl font-bold">Categories</h1>
+              {data.map((category: MenuCategoryType, index: number) => (
+                <button key={category.name} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-2xl" onClick={()=>setCategory(index)}>
+                  {category.name}
+                </button>
+              ))}       
+            </div>
+            <div className='w-2/5 bg-zinc-500 p-6'>
+              <h1 className="text-6xl font-bold">{data[category].name}</h1>
+            </div>
+          </div>
+          <Menu category={data[category]} launchQuantityPicker={launchQuantityPicker}/>
+        </div>
+        <div className="flex bg-zinc-800 flex-col w-1/7 p-8 gap-4" id="sidebar">
+            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-2xl " onClick={()=>placeOrder()}>
+              S
+            </button>
+            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-2xl" onClick={()=>placeOrder()}>
+              M
+            </button>
+            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-2xl" onClick={()=>placeOrder()}>
+              L
+            </button>            
+          </div>
       </div>
     </div>
   );

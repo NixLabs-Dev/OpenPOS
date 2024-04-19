@@ -7,7 +7,7 @@
     "distDir": "../out"
   },
   "package": {
-    "productName": "seshPOS",
+    "productName": "OpenPOS",
     "version": "0.1.0"
   },
   "tauri": {
@@ -29,7 +29,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "com.tauri.dev",
+      "identifier": "site.minemans.opepos",
       "longDescription": "",
       "macOS": {
         "entitlements": null,
@@ -55,11 +55,9 @@
     },
     "windows": [
       {
-        "fullscreen": false,
-        "height": 600,
+        "fullscreen": true,
         "resizable": true,
-        "title": "OpenPOS",
-        "width": 800
+        "title": "OpenPOS"
       }
     ]
   }

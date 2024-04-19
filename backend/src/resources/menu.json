@@ -53,87 +53,132 @@
         "items": [
             {
                 "name": "Big Mac",
-                "price": 5.99
+                "price": 5.89
             },
             {
                 "name": "QPC",
-                "price": 6.39
+                "price": 5.99
             },
             {
                 "name": "Bacon QPC",
+                "price": 7.49
+            },
+            {
+                "name": "Deluxe QPC",
                 "price": 7.55
             },
             {
                 "name": "Dbl QPC",
-                "price": 8.67
+                "price": 7.79
             },
             {
-                "name": "Hamburger",
-                "price": 2.19
+                "name": "Bacon Dbl QPC",
+                "price": 9.29
+            },
+            {
+                "name": "Deluxe Dbl QPC",
+                "price": 7.99
+            },
+            {
+                "name": "McCrispy",
+                "price": 5.39
+            },
+            {
+                "name": "Spicy McCrispy",
+                "price": 5.79
+            },
+            {
+                "name": "Deluxe McCrispy",
+                "price": 6.39
+            },
+            {
+                "name": "Spicy Deluxe McCrispy",
+                "price": 6.79
+            },
+            {
+                "name": "10 Nuggets",
+                "price": 5.89
+            },
+            {
+                "name": "Filet-O-Fish",
+                "price": 5.19
             },
             {
                 "name": "Cheeseburger",
-                "price": 2.39
+                "price": 2.69
             },
             {
                 "name": "Double Cheeseburger",
-                "price": 4.19
-            },
-            {
-                "name": "McDouble",
-                "price": 3.65
-            },
-            {
-                "name": "Bacon McDouble",
-                "price": 4.29
+                "price": 3.99
             },
             {
                 "name": "Daily Double",
                 "price": 4.09
             },
             {
+                "name": "Fry",
+                "price": 4.09
+            }
+        ]
+    },
+    {
+        "name": "Lunch 2",
+        "items": [
+            {
+                "name": "Hamburger",
+                "price": 2.19
+            },
+            {
+                "name": "McDouble",
+                "price": 3.59
+            },
+            {
+                "name": "Bacon McDouble",
+                "price": 4.39
+            },
+            {
                 "name": "4 Nuggets",
-                "price": 2.99
+                "price": 3.39
             },
             {
                 "name": "6 Nuggets",
-                "price": 3.65
-            },
-            {
-                "name": "10 Nuggets",
-                "price": 5.70
+                "price": 4.39
             },
             {
                 "name": "20 Nuggets",
-                "price": 8.99
+                "price": 7.79
             },
             {
                 "name": "40 Nuggets",
-                "price": 17.48
+                "price": 13.19
             },
             {
-                "name": "McCrispy",
-                "price": 5.36
+                "name": "6 Spicy Nuggets",
+                "price": 4.39
             },
             {
-                "name": "Spicy McCrispy",
-                "price": 5.49
+                "name": "10 Spicy Nuggets",
+                "price": 5.89
+            },
+            {
+                "name": "20 Spicy Nuggets",
+                "price": 7.79
+            },
+            {
+                "name": "Bcn Cjn Rnch McCrispy",
+                "price": 6.89
+            },
+            {
+                "name": "Dlx Bcn Cjn Rnch McCrispy",
+                "price": 7.89
             },
             {
                 "name": "McChicken",
-                "price": 2.99
+                "price": 3.69
             },
             {
                 "name": "Hot 'N Spicy McChicken",
-                "price": 2.99
-            },
-            {
-                "name": "Filet-O-Fish",
-                "price": 5.36
-            },
-            {
-                "name": "Fry",
-                "price": 2.49
+                "price": 3.69
             }
         ]
     },
@@ -159,10 +204,6 @@
             {
                 "name": "Soda",
                 "price": 1.49
-            },
-            {
-                "name": "Shamrock Shake",
-                "price": 3.89
             },
             {
                 "name": "Vanilla Shake",
@@ -195,10 +236,6 @@
             },
             {
                 "name": "Oreo McFlurry",
-                "price": 4.59
-            },
-            {
-                "name": "Oreo Shamrock McFlurry",
                 "price": 4.59
             },
             {
