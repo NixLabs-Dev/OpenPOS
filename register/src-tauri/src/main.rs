@@ -6,9 +6,12 @@ use tauri::Manager;
 fn main() {
   tauri::Builder::default()
     .setup(|app| {
-      let window = app.get_window("main").unwrap();
-      window.open_devtools();
-      window.close_devtools();
+      #[cfg(debug_assertions)]
+      {
+        let window = app.get_window("main").unwrap();
+        window.open_devtools();
+        window.close_devtools();
+      }
       Ok(())
     })
     .invoke_handler(tauri::generate_handler![get_environment_variable])

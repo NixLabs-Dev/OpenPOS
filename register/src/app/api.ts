@@ -12,12 +12,15 @@ export class APIManager {
     }
 
     private LoadAsync = async () => {
-        this.backendAddress = await invoke("get_environment_variable", { name: "SERVER_IP" }).then((EnvIP) => {return String(EnvIP)})
+        invoke("get_environment_variable", { name: "SERVER_IP" }).then((hostIp) => {
+            this.backendAddress = String(hostIp);
+        })
     };
 
 
 // Helper Functions
     public getBackendAddress(): string {
+        console.log(`ip is: ${this.backendAddress}`)
         return this.backendAddress
     }
 

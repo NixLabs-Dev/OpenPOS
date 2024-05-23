@@ -1,4 +1,5 @@
 'use client'
+import { invoke } from '@tauri-apps/api/tauri'
 
 import { useEffect, useState } from 'react';
 import {MenuItemType, MenuCategoryType, OrderItemType} from "./util/types/Menu"
@@ -10,16 +11,26 @@ import useSWR from 'swr';
 
 import Menu from './components/Menu';
 import { onlyUnique } from './util/sorterFunctions';
-import { APIManager } from './api';
 
 export default function Greet() {
   const [order, setOrder] = useState<OrderItemType[]>([]);
   const [category, setCategory] = useState(0); //also also yes
   const [orderTotal, setOrderTotal] = useState(0);
 
-  const api = new APIManager()
+  const [backendAddress, setBackendAddress] = useState("");
+  const [mealSize, setSize] = useState("");
 
-  const { data, error, isLoading } = useSWR(`http://${api.getBackendAddress()}/menu`, fetcher)
+  if(backendAddress == "") {
+    setBackendAddress("localhost:6969")
+  }
+
+  // invoke("get_environment_variable", { name: "SERVER_IP" })
+  // .then((hostIp) => {
+  //   setBackendAddress(String(hostIp));
+  // })
+  // .catch(console.log);
+
+  const { data, error, isLoading } = useSWR(`http://${backendAddress}/menu`, fetcher)
 
   const [quantity, setQuantity] = useState(0);
 
@@ -27,18 +38,33 @@ export default function Greet() {
 
   const [currentItem, setCurrentItem] = useState<OrderItemType|null>();
 
-  const launchQuantityPicker = (item: OrderItemType) => {
+  const getItemData = (id: string) => {
+    // var item; 
+    // data.forEach((category: MenuCategoryType) => {
+    //   item = category.items.map((item: MenuItemType) => item.name == id)
+    // })
 
-      setCurrentItem(item)
+    // return item;
+
+    console.log(data)
+  }
+
+  const launchQuantityPicker = (item: string) => {
+      //setCurrentItem(getItemData(item))
       setQuantity(1)
       setIsOpen(true);
   }
 
   const closeModal = () => {
-    console.log(quantity)
+    console.log(currentItem)
     addToOrder({
       name: currentItem?.name!,
-      price: currentItem?.price!
+      price: currentItem?.price!,
+      defaultSize: currentItem?.defaultSize!,
+      smallPrice: currentItem?.smallPrice!,
+      mediumPrice: currentItem?.mediumPrice!,
+      largePrice: currentItem?.largePrice!,
+      side: currentItem?.side!
     }, quantity)
     resetQuantity()
     setCurrentItem(null)
@@ -98,8 +124,21 @@ export default function Greet() {
   useEffect(() => {
     let total = 0;
     order.map((item: OrderItemType, i: number) => {
-      total += item.price * item.quantity;
+      if(mealSize == "S") {
+        total += item.smallPrice * item.quantity
+        //I don't think the new variables are actually being set to anything.
+      }
+      else if(mealSize == "M") {
+        total += item.mediumPrice * item.quantity
+      }
+      else if(mealSize == "L") {
+        total += item.largePrice * item.quantity
+      }
+      else {
+        total += item.price * item.quantity;
+      }
     })
+    setSize("")
     setOrderTotal(Math.ceil((total*1.098) * 100) / 100)
   }, [order]) 
 
@@ -156,7 +195,7 @@ export default function Greet() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(order)
     };
-    fetch('http://localhost:8080/placeorder', requestOptions)
+    fetch(`http://${backendAddress}/placeorder`, requestOptions)
       setOrder([])
   }
 
@@ -187,7 +226,7 @@ export default function Greet() {
         height={250}
         alt="A"
       />
-    <div>OpenPOS failed to connect to {api.getBackendAddress()}</div>
+    <div>OpenPOS failed to connect to {backendAddress}</div>
   </div>
   if (isLoading) return <div className="h-screen flex flex-col items-center justify-center relative text-white font-bold text-5xl">
     <Image
@@ -263,31 +302,31 @@ export default function Greet() {
             </div>
           </div>
           <div className='w-full bg-zinc-800 flex flex-row overflow-hidden'>
-            <div className='w-3/5 bg-zinc-600 p-6 flex flex-row gap-3 items-center'>
+            <div className='w-4/5 bg-zinc-600 p-6 flex flex-row gap-3 items-center text-right'>
               <h1 className="text-3xl font-bold">Categories</h1>
-              {data.map((category: MenuCategoryType, index: number) => (
-                <button key={category.name} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-2xl" onClick={()=>setCategory(index)}>
+              {data.categories.map((category: MenuCategoryType, index: number) => (
+                <button key={category.name} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded text-2xl w-35 " onClick={()=>setCategory(index)}>
                   {category.name}
                 </button>
               ))}       
             </div>
             <div className='w-2/5 bg-zinc-500 p-6'>
-              <h1 className="text-6xl font-bold">{data[category].name}</h1>
+              <h1 className="text-6xl font-bold text-center">{data.categories[category].prettyName}</h1>
             </div>
           </div>
-          <Menu category={data[category]} launchQuantityPicker={launchQuantityPicker}/>
-        </div>
-        <div className="flex bg-zinc-800 flex-col w-1/7 p-8 gap-4" id="sidebar">
-            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-2xl " onClick={()=>placeOrder()}>
+          {/* <Menu category={data[category]} launchQuantityPicker={launchQuantityPicker}/> */}
+          </div>
+          <div className="absolute flex bg-zinc-800 flex-col w-1/7 p-8 gap-4 bottom-0 right-0" id="sidebar">
+            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-2xl" onClick={()=>launchQuantityPicker("S")}>
               S
             </button>
-            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-2xl" onClick={()=>placeOrder()}>
+            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-2xl" onClick={()=>setSize("M")}>
               M
             </button>
-            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-2xl" onClick={()=>placeOrder()}>
+            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-2xl" onClick={()=>setSize("L")}>
               L
             </button>            
-          </div>
+        </div>
       </div>
     </div>
   );

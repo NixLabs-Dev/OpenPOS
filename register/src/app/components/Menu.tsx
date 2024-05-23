@@ -12,13 +12,18 @@ export default function Menu(props : {
 }) {
   // Necessary because we will have to use Greet as a component later.
   return (
-    <div className='w-full bg-zinc-800 flex flex-wrap gap-6 p-4 overflow-y-auto'>
+    <div className='w-full bg-zinc-800 flex flex-wrap gap-6 p-4 overflow-hidden'>
           {props.category.items.map((item: MenuItemType) => (
             <MenuItem  
               key={item.name}
               name={item.name}
               price={item.price}
               launchQuantityPicker={props.launchQuantityPicker}
+              defaultSize={item.defaultSize}
+              smallPrice={item.smallPrice}
+              mediumPrice={item.mediumPrice}
+              largePrice={item.largePrice}
+              side={item.side}
             />
           ))}
     </div>

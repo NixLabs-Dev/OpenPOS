@@ -11,7 +11,7 @@ server.get('/menu', async (request, reply) => {
     .send(menuConfig)
 })
 
-server.listen({ port: 8080 }, (err, address) => {
+server.listen({ port: 6969}, (err, address) => {
   if (err) {
     console.error(err)
     process.exit(1)
